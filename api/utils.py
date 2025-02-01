@@ -16,3 +16,15 @@ def code_converter(source_code,source_language,target_language):
         return str(e)
 
 
+
+def code_explainer(code,language):
+    print("ADFADFADFADFASDFA",code)
+    prompt = f"Explain this {language} code in simple words line by line :\n\n{code}\n\nExplanation:"
+
+    try:
+        model = genai.GenerativeModel("gemini-pro")
+        response = model.generate_content(prompt)
+
+        return response.text.strip()
+    except Exception as e:
+        return str(e)
