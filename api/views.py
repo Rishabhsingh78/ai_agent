@@ -3,7 +3,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from . serializers import agentSerializer
-from . utils import code_converter,code_explainer
+from . utils import code_converter,code_explainer,analyze_github_repo
 
 class CodeConverterView(APIView):
 
@@ -27,3 +27,15 @@ class CodeConverterView(APIView):
             return Response(response_data,status=status.HTTP_200_OK)
         return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
 
+
+
+class GithubAnalyzerView(APIView):
+    def post(self,request):
+        repo_url = request.data.get("repo_url", "")
+
+        if not repo_url:
+            return Response({'error':"GitHub repo URL is required"},status=status.HTTP_400_BAD_REQUEST)
+        
+        project_summary = analyze_github_repo(repo_url)
+
+        return Response({'project_summary': project_summary},status=status.HTTP_200_OK)
